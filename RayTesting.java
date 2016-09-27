@@ -7,19 +7,15 @@ import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 
-
-/**
- * Created by lastr on 5/3/2016.
- */
 public class RayTesting {
 
     private static final Vector3 rayFrom = new Vector3();
     private static final Vector3 rayTo = new Vector3();
     private static final ClosestRayResultCallback callback = new ClosestRayResultCallback(rayFrom, rayTo);
-    //public static final game;
 
     public static btCollisionObject rayTest(btDynamicsWorld collisionWorld, Ray ray, MyGdxGame game) {
 
+        //this is a sample class for detecting input via raycasting and is currently not used
         rayFrom.set(ray.origin);
         //rayFrom.set(game.cam.position);
 
@@ -29,8 +25,7 @@ public class RayTesting {
         // 50 meters max from the origin
         rayTo.set(ray.direction).scl(20f).add(rayFrom);
 
-        // we reuse the ClosestRayResultCallback, thus we need to reset its
-        // values
+        // we reuse the ClosestRayResultCallback, thus we need to reset its values
         callback.setCollisionObject(null);
         callback.setClosestHitFraction(1f);
 

@@ -281,7 +281,7 @@ public class WorldGenerator {
 
             for(int y = 0; y < remainingCities.size(); y++) {
                 //only create roads if we are within our maxDistance
-                if(Distance(ourCities.get(x).center,remainingCities.get(y).center) > maxRoadDistance){
+                if(Distance(ourCities.get(x).getCenter(), remainingCities.get(y).getCenter()) > maxRoadDistance){
                     continue;
                 }
                 else{//for each city we connect to reduce our chance to connect to another
@@ -350,7 +350,7 @@ public class WorldGenerator {
 
         for(int x = 0; x < ourCities.size(); x++) {
 
-            float distance = (float)Distance(ourCities.get(x).center, pos);
+            float distance = (float)Distance(ourCities.get(x).getCenter(), pos);
 
             if(distance < smallest){
                 smallest = distance;
@@ -358,7 +358,7 @@ public class WorldGenerator {
             }
         }
 
-        ConnectRoads(ourCities.get(smallestIndex).center, pos);
+        ConnectRoads(ourCities.get(smallestIndex).getCenter(), pos);
 
         worldTiles[(int)pos.x][(int)pos.y] = 1;
     }
@@ -383,15 +383,15 @@ public class WorldGenerator {
         for(int x = 0; x < ourCities.size(); x++) {
 
             //each city has a house that needs someone saved, so do a random check and see if a house has someone to save
-            int count = ourCities.get(x).houses.size();
+            int count = ourCities.get(x).getHouses().size();
             thisCity = ourCities.get(x);
 
             int hot = GetRandomInt(0, count - 1); //assumes only one house per city, so just pick one
-            toSave.add(new Vector3(thisCity.houses.get(hot).x, 0, thisCity.houses.get(hot).z));
+            toSave.add(new Vector3(thisCity.getHouses().get(hot).x, 0, thisCity.getHouses().get(hot).z));
 
             for(int y = 0; y < count; y++) {
 
-                Vector3 thisHouse = new Vector3(thisCity.houses.get(y).x, 0, thisCity.houses.get(y).z);
+                Vector3 thisHouse = new Vector3(thisCity.getHouses().get(y).x, 0, thisCity.getHouses().get(y).z);
 
                 if (!OutOfBounds(thisHouse) && worldTiles[(int) thisHouse.x][(int) thisHouse.z] == 19) {
                     worldTiles[(int) thisHouse.x][(int) thisHouse.z] = GetHouseType(thisHouse);
@@ -500,7 +500,7 @@ public class WorldGenerator {
        // Gdx.app.log("WARN","Running create city to make more roads " + city.center);
         //this method places buildings and and crossroad sections
         Vector3[] pos = {new Vector3(1,0,0),new Vector3(-1,0,0), new Vector3(0,0,1),new Vector3(0,0,-1)};
-        Vector3 center = city.center;
+        Vector3 center = city.getCenter();
         int random;
         int houseRandom;
         Vector3 worldPosition;
@@ -534,47 +534,47 @@ public class WorldGenerator {
 
                     if (houseRandom > 10) {
                         if(x < 2){//then we are horizontal
-                            city.houses.add(new Vector3(worldPosition.x,0,worldPosition.z + 1));
-                            city.houses.add(new Vector3(worldPosition.x,0,worldPosition.z - 1));
+                            city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z + 1));
+                            city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z - 1));
                         }
                         else if(x > 1){//then we are vertical
-                            city.houses.add(new Vector3(worldPosition.x + 1,0,worldPosition.z));
-                            city.houses.add(new Vector3(worldPosition.x - 1,0,worldPosition.z));
+                            city.getHouses().add(new Vector3(worldPosition.x + 1, 0, worldPosition.z));
+                            city.getHouses().add(new Vector3(worldPosition.x - 1, 0, worldPosition.z));
                         }
                     }
                     else if(houseRandom > 3){
                         if(x < 2){//then we are horizontal
                             if(houseRandom % 2 == 0) {
-                                city.houses.add(new Vector3(worldPosition.x, 0, worldPosition.z + 1));
+                                city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z + 1));
                             }
                             else {
-                                city.houses.add(new Vector3(worldPosition.x, 0, worldPosition.z - 1));
+                                city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z - 1));
                             }
                         }
                         else if(x > 1){//then we are vertical
                             if(houseRandom % 2 == 0) {
-                                city.houses.add(new Vector3(worldPosition.x + 1, 0, worldPosition.z ));
+                                city.getHouses().add(new Vector3(worldPosition.x + 1, 0, worldPosition.z));
                             }
                             else {
-                                city.houses.add(new Vector3(worldPosition.x - 1, 0, worldPosition.z ));
+                                city.getHouses().add(new Vector3(worldPosition.x - 1, 0, worldPosition.z));
                             }
                         }
                     }
                     else{
                         if(x < 2){//then we are horizontal
                             if(worldPosition.x % 3 == 0 && houseRandom % 2 == 0) {
-                                city.houses.add(new Vector3(worldPosition.x, 0, worldPosition.z + 1));
+                                city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z + 1));
                             }
                             else if (worldPosition.x % 3 == 0) {
-                                city.houses.add(new Vector3(worldPosition.x, 0, worldPosition.z - 1));
+                                city.getHouses().add(new Vector3(worldPosition.x, 0, worldPosition.z - 1));
                             }
                         }
                         else if(x > 1){//then we are vertical
                             if(worldPosition.z % 3 == 0 && houseRandom % 2 == 0) {
-                                city.houses.add(new Vector3(worldPosition.x + 1, 0, worldPosition.z ));
+                                city.getHouses().add(new Vector3(worldPosition.x + 1, 0, worldPosition.z));
                             }
                             else if(worldPosition.z % 3 == 0){
-                                city.houses.add(new Vector3(worldPosition.x - 1, 0, worldPosition.z ));
+                                city.getHouses().add(new Vector3(worldPosition.x - 1, 0, worldPosition.z));
                             }
                         }
                     }
@@ -594,15 +594,15 @@ public class WorldGenerator {
         //so this method connects a road between our first and second city
         //Gdx.app.log("WARN", "Pickle calling ConnectRoads  " + city1.center.toString() + " " + city2.center.toString());
 
-        Vector3 diff = new Vector3((city2.center.x - city1.center.x), 0,(city2.center.z - city1.center.z));// = city1.center.sub(city2.center);        \
+        Vector3 diff = new Vector3((city2.getCenter().x - city1.getCenter().x), 0,(city2.getCenter().z - city1.getCenter().z));// = city1.center.sub(city2.center);        \
         int dx = (int)Math.abs(diff.x);
         int dz = (int)Math.abs(diff.z);
 
         int counterX = 1;
         int counterZ = 1;
 
-        Vector3 cityC = city1.center;
-        Vector3 cityC1 = city2.center;
+        Vector3 cityC = city1.getCenter();
+        Vector3 cityC1 = city2.getCenter();
 
         float lastX = 0;
 

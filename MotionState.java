@@ -1,12 +1,13 @@
 package com.rpetersen.game;
 
+/**
+ * Created by lastresortname on 9/14/2016.
+ */
+
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;
 
-/**
- * Created by lastr on 9/14/2016.
- */
-//so the physics engine needs to convert our transforms when we are moved, this automates it
+//so the physics engine needs to convert our transforms when we are moved, this automates it for us
 public class MotionState extends btMotionState {
     Matrix4 transform;
     @Override

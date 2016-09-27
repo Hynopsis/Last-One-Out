@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class GameObject extends ModelInstance implements Disposable {
 
+    //many of these overridden constructors aren't used, but may be in the future for various models
+
     //this object has quite a few overrode constructors to handle different things
     public btRigidBody body;						//what we are using for rigidbody physics
     public btCollisionShape shape;				    //this is the size of our instance collisions shape
@@ -84,7 +86,7 @@ public class GameObject extends ModelInstance implements Disposable {
 
     public GameObject(Model model, float mass, float friction, int type) {
         //instead of having seperate constructors, Im using a case statement to setup their collision shaping and
-        //other physics data.  Since we are making so many models, we have static refrences for each type that are initialized
+        //other physics data.  Since we are making so many models, we have static references for each type that are initialized
         //the first time they are created.  This prevents a massive amount of gc, and loads levels much faster
 
         //type is 0 = tree, 1 = rock,3 = debris, 4 = player, 5 = ground, 6 = house,

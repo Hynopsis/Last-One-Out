@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.model.Node;
@@ -30,29 +28,20 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
-import com.badlogic.gdx.physics.bullet.collision.CollisionObjectWrapper;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionAlgorithm;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.collision.btDbvtBroadphase;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
-import com.badlogic.gdx.physics.bullet.collision.btDispatcherInfo;
-import com.badlogic.gdx.physics.bullet.collision.btManifoldResult;
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
-import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -60,17 +49,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import java.util.Random;
 
-//
 public class MyGdxGame extends ApplicationAdapter {
 
-    private Preferences prefs;// = Gdx.app.getPreferences("My Preferences");
+    //many of these should have getters/setter, but it will take some time to go through them all and
+    //check which ones are used in other classes and actually need them.  To-do.
+    private Preferences prefs;              // used for saving data regardless of platform
     boolean initial = true;                 //this is a flag for the first time the game is run
 
     int level = 0;                          //this is the current level we are on, 0-based index
@@ -1155,6 +1143,7 @@ public class MyGdxGame extends ApplicationAdapter {
     @Override
     public void render() {
         ///this gets called every frame so keep that in mind
+
         stage.act();//for rendering our ui components
 
         //so if our player is outside of our map, end the game
@@ -1192,7 +1181,7 @@ public class MyGdxGame extends ApplicationAdapter {
         if(playerGo != null){
             //update the player speed relative to detected input
             //speed is reverse, so smaller number speeds up, larger slows down
-            if (input.accelerating) {
+            if (input.isAccelerating()) {
 
                 if (speed > -maxSpeed) {
                     if (speed >= 0) {
@@ -1205,7 +1194,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 }
                 //Gdx.app.log("Warn", "Aceelerating speed " + speed + " versus velocity " + playerGo.body.getLinearVelocity().z);
             }
-            else if (input.braking) {
+            else if (input.isBraking()) {
 
                 if (speed < -maxRSpeed) {
 
@@ -1270,10 +1259,10 @@ public class MyGdxGame extends ApplicationAdapter {
                 gas += speed / maxSpeed * gasUse;
             }
             //really important, must use the physics library methods for model movement to coordinate with physics, Unity and here
-            if (input.turningLeft) {
+            if (input.isTurningLeft()) {
                 playerGo.transform.rotate(0, 1, 0, turnSpeed * Gdx.graphics.getDeltaTime());//.translate(0, 0, 1 * Gdx.graphics.getDeltaTime()
             }
-            if (input.turningRight) {
+            if (input.isTurningRight()) {
                 playerGo.transform.rotate(0, 1, 0, -turnSpeed * Gdx.graphics.getDeltaTime());//.translate(0, 0, 1 * Gdx.graphics.getDeltaTime()
             }
             //shouldnt need to do this anymore, but have to for rotating till switch to angularvelocity
