@@ -24,6 +24,7 @@ Coming eventually:
 - Adding people running from their houses to your car, you currently fill a meter which isn't very realistic.
 - Options menu, currently there is a options button but it doesn't work yet.
 - Particle effects for collisions.
-- For main class, change name cause it is silly, and refactor by adding getters/setters
+- For main class, change name cause it is silly, and refactor by adding getters/setter
+- For worldGenerator class refactor by adding getters/setters
 
 You can view a video of the first level at https://www.youtube.com/watch?v=80Tu0zkfKD4
